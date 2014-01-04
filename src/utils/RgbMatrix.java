@@ -1,11 +1,9 @@
 package utils;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.Arrays;
 
 public class RgbMatrix {
-	private short[][][] data;
+	private byte[][][] data;
 	private int height;
 	private int width;
 
@@ -13,10 +11,10 @@ public class RgbMatrix {
 		super();
 		this.height = height;
 		this.width = width;
-		data = new short[height][width][3];
+		data = new byte[height][width][3];
 	}
 
-	public short[][][] getData() {
+	public byte[][][] getData() {
 		return data;
 	}
 

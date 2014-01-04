@@ -69,7 +69,12 @@ public class IDAT extends Chunk {
 	private Deflater compressor = new Deflater();
 
 	public IDAT(RgbMatrix data) {
+		this(data, (byte) 0);
+	}
+
+	public IDAT(RgbMatrix data, byte type) {
 		super(0, IDAT.class.getSimpleName().getBytes());
+		filterType = type;
 		filter = new Filter(data);
 		super.updateCRC();
 	}
@@ -106,10 +111,10 @@ public class IDAT extends Chunk {
 		return builder.toString();
 	}
 
-//	@Override
-//	protected void updateCRC() {
-//		// TODO Auto-generated method stub
-//
-//	}
+	// @Override
+	// protected void updateCRC() {
+	// // TODO Auto-generated method stub
+	//
+	// }
 
 }

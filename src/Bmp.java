@@ -32,7 +32,7 @@ public class Bmp {
 				// zakomentowac jak niepotrzebujesz
 				setPixelData(img, i, j, new Color(rgb[2], rgb[1], rgb[0]));
 				for (int k = 0; k < rgb.length; k++) {
-					data.getData()[j][i][k] = (short) rgb[k];
+					data.getData()[j][i][k] = (byte) rgb[k];
 				}
 			}
 		}

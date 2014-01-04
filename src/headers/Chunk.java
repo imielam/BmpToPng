@@ -2,8 +2,7 @@ package headers;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-
-import utils.CRC;
+import java.util.zip.CRC32;
 
 public abstract class Chunk {
 	/**
@@ -38,7 +37,7 @@ public abstract class Chunk {
 	 * chunks containing no data
 	 */
 	public int chCRC;
-	
+
 	public Chunk(int chLength, byte[] chType, byte[] chData, int chCRC) {
 		super();
 		this.chLength = chLength;
@@ -46,46 +45,51 @@ public abstract class Chunk {
 		this.chData = chData;
 		this.chCRC = chCRC;
 	}
-	
-	public Chunk(int chLength, byte[] chType, byte[] chData){
+
+	public Chunk(int chLength, byte[] chType, byte[] chData) {
 		super();
 		this.chLength = chLength;
 		this.chType = chType;
 		this.chData = chData;
 	}
-	
+
 	public Chunk(int chLength, byte[] chType) {
 		super();
 		this.chLength = chLength;
 		this.chType = chType;
 	}
-	
-	protected void updateCRC(){
+
+	protected void updateCRC() {
 		ByteBuffer b = ByteBuffer.allocate(chType.length + chLength);
 		b.order(ByteOrder.BIG_ENDIAN);
 		b.put(chType);
 		b.put(chData);
-		CRC c = CRC.getInstance();
-		chCRC = c.updateCRC(0, b.array());
+		// CRC c = CRC.getInstance();
+		// chCRC = c.updateCRC(0, b.array());
+		CRC32 crc = new CRC32();
+		crc.update(b.array());
+		chCRC = (int) crc.getValue();
 	}
-	
-	public String stringToWrite(){
+
+	public String stringToWrite() {
 		StringBuilder sb = new StringBuilder();
-		ByteBuffer b = ByteBuffer.allocate(4 + 4 + chType.length + chData.length);
+		ByteBuffer b = ByteBuffer.allocate(4 + 4 + chType.length
+				+ chData.length);
 		b.order(ByteOrder.BIG_ENDIAN);
 		b.putInt(chLength);
 		b.put(chType);
 		b.put(chData);
 		b.putInt(chCRC);
 		byte[] result = b.array();
-		for (byte i : result){
+		for (byte i : result) {
 			sb.append(i);
 		}
-		return sb.toString();		
+		return sb.toString();
 	}
-	
-	public byte[] byteToWrite(){
-		ByteBuffer b = ByteBuffer.allocate(4 + 4 + chType.length + chData.length);
+
+	public byte[] byteToWrite() {
+		ByteBuffer b = ByteBuffer.allocate(4 + 4 + chType.length
+				+ chData.length);
 		b.order(ByteOrder.BIG_ENDIAN);
 		b.putInt(chLength);
 		b.put(chType);

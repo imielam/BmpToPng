@@ -4,9 +4,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 
-import utils.CRC;
-
-public class IHDR extends Chunk{
+public class IHDR extends Chunk {
 	/**
 	 * <0:2^31-1>
 	 */
@@ -18,7 +16,7 @@ public class IHDR extends Chunk{
 	/**
 	 * (1;2;4;8;16)
 	 */
-	private byte depth = 16; //
+	private byte depth = 8; //
 	/**
 	 * (0;2;3;4;6) Color type codes represent sums of the following values:
 	 * <ul>
@@ -56,16 +54,14 @@ public class IHDR extends Chunk{
 	 * </ul>
 	 */
 	private byte interlanceMethor = 0;
-	
-	public IHDR(int width,
-			int height){
-		this(0, width,
-			height, (byte)16, (byte)2, (byte) 0);
+
+	public IHDR(int width, int height) {
+		this(0, width, height, (byte) 8, (byte) 2, (byte) 0);
 	}
-		
-	public IHDR(int chLength, int width,
-			int height, byte depth, byte type, byte interlanceMethor) {
-		
+
+	public IHDR(int chLength, int width, int height, byte depth, byte type,
+			byte interlanceMethor) {
+
 		super(chLength, IHDR.class.getSimpleName().getBytes());
 		this.width = width;
 		this.height = height;
@@ -135,7 +131,5 @@ public class IHDR extends Chunk{
 	public byte getInterlanceMethor() {
 		return interlanceMethor;
 	}
-	
-	
 
 }

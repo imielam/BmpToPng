@@ -5,6 +5,7 @@ import java.nio.ByteOrder;
 
 public class Filter {
 	private RgbMatrix matrix;
+	private int bpp = 3;
 
 	public Filter(RgbMatrix matrix) {
 		super();
@@ -33,9 +34,18 @@ public class Filter {
 	 * filtered scanline. <br/>
 	 * For all x < 0, assume Raw(x) = 0.
 	 */
-	private void Sub(int x, int[][][] pixele) {
-		// Raw = pixele[x][y];
-		// Raw(x) - Raw(x-this.bpp);
+	private byte[][] Sub() {
+		byte[][] data = None();
+		byte[][] newDate = data.clone();
+		int c = 0;
+		for (byte[] i : data) {
+			for (int j = 0; j < i.length; j++) {// = bpp){
+				byte tmp = ((j - bpp) < 0) ? (byte) 0 : i[j - bpp];
+				newDate[c][j] = (byte) (i[j] - tmp);
+			}
+			c++;
+		}
+		return newDate;
 	}
 
 	/**
@@ -153,8 +163,7 @@ public class Filter {
 	public byte[] applyFilter(byte type) {
 		switch (type) {
 		case (byte) 1:
-			Sub(0, null);
-			break;
+			return transormToArray(type, Sub());
 		case (byte) 2:
 			Up();
 			break;
@@ -190,11 +199,11 @@ public class Filter {
 	private byte[][] None() {
 		byte[][] newData = new byte[matrix.getHeight()][];
 		for (int i = 0; i < matrix.getHeight(); i++) {
-			ByteBuffer b = ByteBuffer.allocate(matrix.getWidth() * 2 * 3);
+			ByteBuffer b = ByteBuffer.allocate(matrix.getWidth() * 3);
 			b.order(ByteOrder.BIG_ENDIAN);
-			for (short[] j : matrix.getData()[i]) {
-				for (short k : j) {
-					b.putShort(k);
+			for (byte[] j : matrix.getData()[i]) {
+				for (byte k : j) {
+					b.put(k);
 				}
 			}
 			newData[i] = b.array();

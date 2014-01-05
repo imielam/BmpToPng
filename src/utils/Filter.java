@@ -36,10 +36,10 @@ public class Filter {
 	 */
 	private byte[][] Sub() {
 		byte[][] data = None();
-		byte[][] newDate = data.clone();
+		byte[][] newDate = new byte[data.length][data[0].length];
 		int c = 0;
 		for (byte[] i : data) {
-			for (int j = 0; j < i.length; j++) {// = bpp){
+			for (int j = 0; j < i.length; j++) {
 				byte tmp = ((j - bpp) < 0) ? (byte) 0 : i[j - bpp];
 				newDate[c][j] = (byte) (i[j] - tmp);
 			}
@@ -66,8 +66,27 @@ public class Filter {
 	 * On the first scanline of an image (or of a pass of an interlaced image),
 	 * assume Prior(x) = 0 for all x.
 	 */
-	private void Up() {
+	private byte[][] Up() {
+		byte[][] data = None();
+		byte[][] newDate = new byte[data.length][data[0].length];
+		// byte[][] newDate = data.clone();
+		// int c = 0;
 
+		int height = data.length;
+		int width = data[0].length;
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				byte d = data[i][j];
+				byte tmp;
+				if (i == 0) {
+					tmp = 0;
+				} else {
+					tmp = data[i - 1][j];
+				}
+				newDate[i][j] = (byte) (d - tmp);
+			}
+		}
+		return newDate;
 	}
 
 	/**
@@ -91,8 +110,33 @@ public class Filter {
 	 * For all x < 0, assume Raw(x) = 0. On the first scanline of an image (or
 	 * of a pass of an interlaced image), assume Prior(x) = 0 for all x.
 	 */
-	private void Averege() {
+	private byte[][] Averege() {
+		byte[][] data = None();
+		byte[][] newDate = new byte[data.length][data[0].length];
+		// byte[][] rawBPP = Arrays.copyOfRange(data, 0, data.length);
+		// byte[][] prior = Arrays.copyOfRange(data, 0, data.length);
 
+		int height = data.length;
+		int width = data[0].length;
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				byte d = data[i][j];
+				byte prior, rawBPP;
+				if (i == 0) {
+					prior = 0;
+				} else {
+					prior = data[i - 1][j];
+				}
+
+				if ((j - bpp) < 0) {
+					rawBPP = 0;
+				} else {
+					rawBPP = data[i][j - bpp];
+				}
+				newDate[i][j] = (byte) (d - Math.floor((rawBPP + prior) / 2));
+			}
+		}
+		return newDate;
 	}
 
 	/**
@@ -141,8 +185,38 @@ public class Filter {
 	 * of an image (or of a pass of an interlaced image), assume Prior(x) = 0
 	 * for all x.
 	 */
-	private void Peath() {
+	private byte[][] Peath() {
+		byte[][] data = None();
+		byte[][] newDate = new byte[data.length][data[0].length];
 
+		int height = data.length;
+		int width = data[0].length;
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				byte d = data[i][j];
+				byte prior, rawBPP, priorBPP;
+				if (i == 0) {
+					prior = 0;
+				} else {
+					prior = data[i - 1][j];
+				}
+
+				if ((j - bpp) < 0) {
+					rawBPP = 0;
+				} else {
+					rawBPP = data[i][j - bpp];
+				}
+
+				if ((i == 0) || ((j - bpp) < 0)) {
+					priorBPP = 0;
+				} else {
+					priorBPP = data[i - 1][j - bpp];
+				}
+				newDate[i][j] = (byte) (d - PaethPredictor(rawBPP, prior,
+						priorBPP));
+			}
+		}
+		return newDate;
 	}
 
 	/**
@@ -165,20 +239,30 @@ public class Filter {
 		case (byte) 1:
 			return transormToArray(type, Sub());
 		case (byte) 2:
-			Up();
-			break;
+			return transormToArray(type, Up());
 		case (byte) 3:
-			Averege();
-			break;
+			return transormToArray(type, Averege());
 		case (byte) 4:
-			Peath();
-			break;
+			return transormToArray(type, Peath());
 		case (byte) 0:
 			return transormToArray(type, None());
 		default:
 			throw new RuntimeException("Nie ma takiego filtru!!");
 		}
-		return null;
+	}
+
+	private byte PaethPredictor(byte a, byte b, byte c) {
+		byte p = (byte) (a + b - c);
+		byte pa = (byte) Math.abs(p - a);
+		byte pb = (byte) Math.abs(p - b);
+		byte pc = (byte) Math.abs(p - c);
+		if (pa <= pb && pa <= pc) {
+			return a;
+		} else if (pb <= pc) {
+			return b;
+		} else {
+			return c;
+		}
 
 	}
 

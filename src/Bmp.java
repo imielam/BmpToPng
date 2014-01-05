@@ -8,7 +8,8 @@ import javax.imageio.ImageIO;
 import utils.RgbMatrix;
 
 public class Bmp {
-	public static final String SCIEZKA = "src/test.bmp";
+	// public static final String SCIEZKA = "src/test.bmp";
+	public static final String SCIEZKA = "src/blackbuck.bmp";
 	private RgbMatrix rgbMatrix;
 
 	public void compute() {

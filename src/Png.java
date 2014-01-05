@@ -69,10 +69,10 @@ public class Png {
 		data.compress();
 		chunkList.add(data);
 		chunkList.add(new IEND());
-		System.out.print(getNecesseryHeader());
-		for (Chunk c : chunkList) {
-			System.out.print(c.stringToWrite());
-		}
+		// System.out.print(getNecesseryHeader());
+		// for (Chunk c : chunkList) {
+		// System.out.print(c.stringToWrite());
+		// }
 		saveToFile();
 
 	}

@@ -36,8 +36,8 @@ public class Png {
 	private void saveToFile() {
 		Path path = Paths.get(PATH);
 		Path path_png = Paths.get(PATH + ".png");
-		// TODO: Poprawiæ allokowanie danych
-		ByteBuffer b = ByteBuffer.allocate(100000);
+		ByteBuffer b = ByteBuffer.allocate(rgbMatrix.getHeight()
+				* rgbMatrix.getWidth() * rgbMatrix.getBPP());
 		int limit = 0;
 		b.put(neccessaryHeader);
 		limit += neccessaryHeader.length;

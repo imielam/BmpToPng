@@ -5,11 +5,12 @@ import java.nio.ByteOrder;
 
 public class Filter {
 	private RgbMatrix matrix;
-	private int bpp = 3;
+	private int bpp;
 
 	public Filter(RgbMatrix matrix) {
 		super();
 		this.matrix = matrix;
+		bpp = matrix.getBPP();
 	}
 
 	/**
@@ -225,8 +226,8 @@ public class Filter {
 				} else {
 					priorBPP = data[i - 1][j - bpp];
 				}
-				newDate[i][j] = (byte) ((d - PaethPredictor(rawBPP, prior,
-						priorBPP) % 256));
+				newDate[i][j] = (byte) (d - PaethPredictor(rawBPP, prior,
+						priorBPP));
 			}
 		}
 		return newDate;
@@ -264,7 +265,10 @@ public class Filter {
 		}
 	}
 
-	private int PaethPredictor(int a, int b, int c) {
+	private int PaethPredictor(byte ba, byte bb, byte bc) {
+		int a = (int) ba & 0xff;
+		int b = (int) bb & 0xff;
+		int c = (int) bc & 0xff;
 		int p = (a + b - c);
 		int pa = Math.abs(p - a);
 		int pb = Math.abs(p - b);

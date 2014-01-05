@@ -1,5 +1,12 @@
 package utils;
 
+/**
+ * Klasa s³u¿¹ca do obliczeñ CRC
+ * 
+ * @deprecated
+ * @author Maciej
+ * 
+ */
 public class CRC {
 	private final static CRC instance = new CRC();
 	private final long[] crcTable = new long[256];

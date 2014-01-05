@@ -8,16 +8,25 @@ import javax.imageio.ImageIO;
 import utils.RgbMatrix;
 
 public class Bmp {
-	public static final String SCIEZKA = "src/test.bmp";
+	private String sciezka = "src/test.bmp";
 	// public static final String SCIEZKA = "src/testBMP_MI.bmp";
 	// public static final String SCIEZKA = "src/blackbuck.bmp";
 	private RgbMatrix rgbMatrix;
+
+	public Bmp() {
+		;
+	}
+
+	public Bmp(String sciezka) {
+		super();
+		this.sciezka = sciezka;
+	}
 
 	public void compute() {
 		BufferedImage img;
 		RgbMatrix data;
 		try {
-			img = ImageIO.read(new File(SCIEZKA));
+			img = ImageIO.read(new File(sciezka));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -45,7 +54,8 @@ public class Bmp {
 	public static void main(String[] args) throws IOException {
 
 		// sciezka = "F:\\workspace\\BmpToPng\\src\\test.bmp";
-		BufferedImage img = ImageIO.read(new File(SCIEZKA));
+		String sciezka = "src/test.bmp";
+		BufferedImage img = ImageIO.read(new File(sciezka));
 		int h = img.getHeight();
 		int w = img.getWidth();
 		int[][][] pixele = new int[w][h][3];

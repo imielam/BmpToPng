@@ -1,5 +1,5 @@
 public class Main {
-	public static final byte FILER_TYPE = 1;
+	public static final byte FILER_TYPE = 3;
 
 	public static void main(String[] args) {
 		Bmp bmp = new Bmp();

@@ -37,13 +37,21 @@ public class Filter {
 	private byte[][] Sub() {
 		byte[][] data = None();
 		byte[][] newDate = new byte[data.length][data[0].length];
-		int c = 0;
-		for (byte[] i : data) {
-			for (int j = 0; j < i.length; j++) {
-				byte tmp = ((j - bpp) < 0) ? (byte) 0 : i[j - bpp];
-				newDate[c][j] = (byte) (i[j] - tmp);
+
+		int height = data.length;
+		int width = data[0].length;
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				byte d = data[i][j];
+				byte rawBPP;
+				if ((j - bpp) < 0) {
+					rawBPP = 0;
+				} else {
+					rawBPP = data[i][j - bpp];
+				}
+				int tmp = (d - rawBPP);
+				newDate[i][j] = (byte) tmp;
 			}
-			c++;
 		}
 		return newDate;
 	}
@@ -83,6 +91,7 @@ public class Filter {
 				} else {
 					tmp = data[i - 1][j];
 				}
+				int tmp2 = (d - tmp);
 				newDate[i][j] = (byte) (d - tmp);
 			}
 		}
@@ -133,7 +142,11 @@ public class Filter {
 				} else {
 					rawBPP = data[i][j - bpp];
 				}
-				newDate[i][j] = (byte) (d - Math.floor((rawBPP + prior) / 2));
+				int intP = (int) prior & 0xff;
+				int intR = (int) rawBPP & 0xff;
+				int tmp = (int) Math.floor((intR + intP) / 2.0);
+				int tmp2 = (d - tmp);
+				newDate[i][j] = (byte) (tmp2);
 			}
 		}
 		return newDate;
@@ -212,8 +225,8 @@ public class Filter {
 				} else {
 					priorBPP = data[i - 1][j - bpp];
 				}
-				newDate[i][j] = (byte) (d - PaethPredictor(rawBPP, prior,
-						priorBPP));
+				newDate[i][j] = (byte) ((d - PaethPredictor(rawBPP, prior,
+						priorBPP) % 256));
 			}
 		}
 		return newDate;
@@ -251,11 +264,11 @@ public class Filter {
 		}
 	}
 
-	private byte PaethPredictor(byte a, byte b, byte c) {
-		byte p = (byte) (a + b - c);
-		byte pa = (byte) Math.abs(p - a);
-		byte pb = (byte) Math.abs(p - b);
-		byte pc = (byte) Math.abs(p - c);
+	private int PaethPredictor(int a, int b, int c) {
+		int p = (a + b - c);
+		int pa = Math.abs(p - a);
+		int pb = Math.abs(p - b);
+		int pc = Math.abs(p - c);
 		if (pa <= pb && pa <= pc) {
 			return a;
 		} else if (pb <= pc) {

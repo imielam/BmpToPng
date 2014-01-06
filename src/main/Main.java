@@ -1,3 +1,5 @@
+package main;
+
 public class Main {
 
 	/**
@@ -28,6 +30,18 @@ public class Main {
 	// public static final String SCIEZKA = "src/testBMP_MI.bmp";
 
 	public static final String SCIEZKA = "src/blackbuck (1).bmp";
+
+	public static String run() {
+		return run(SCIEZKA, FILER_TYPE);
+	}
+
+	public static String run(String sciezka, int typ) {
+		Bmp bmp = new Bmp(sciezka);
+		bmp.compute();
+		Png png = new Png(bmp.getRgbMatrix());
+		png.createPNG((byte) typ);
+		return "zakoñczy³em konwersje.";
+	}
 
 	public static void main(String[] args) {
 		Bmp bmp = new Bmp(SCIEZKA);

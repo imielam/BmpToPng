@@ -1,3 +1,4 @@
+package main;
 import headers.Chunk;
 import headers.IDAT;
 import headers.IEND;

@@ -1,4 +1,5 @@
 package main;
+
 import headers.Chunk;
 import headers.IDAT;
 import headers.IEND;
@@ -34,9 +35,10 @@ public class Png {
 		return sb.toString();
 	}
 
-	private void saveToFile() {
-		Path path = Paths.get(PATH);
-		Path path_png = Paths.get(PATH + ".png");
+	private void saveToFile(String path_destiny) {
+		// Path path = Paths.get(PATH);
+		Path path = Paths.get(path_destiny);
+		Path path_png = Paths.get(path + ".png");
 		ByteBuffer b = ByteBuffer.allocate(rgbMatrix.getHeight()
 				* rgbMatrix.getWidth() * rgbMatrix.getBPP());
 		int limit = 0;
@@ -47,13 +49,6 @@ public class Png {
 			b.put(chunkByte);
 			limit += chunkByte.length;
 		}
-		// b.limit(limit);
-
-		// byte[] arrayB = b.array();
-		// ;
-
-		// ByteBuffer newB = ByteBuffer.allocate(limit);
-		// newB.put(b);
 
 		try {
 			Files.write(path, Arrays.copyOf(b.array(), limit));
@@ -64,7 +59,7 @@ public class Png {
 		}
 	}
 
-	public void createPNG(byte type) {
+	public void createPNG(byte type, String destiny) {
 		chunkList.add(new IHDR(rgbMatrix.getWidth(), rgbMatrix.getHeight()));
 		IDAT data = new IDAT(rgbMatrix, type);
 		data.compress();
@@ -74,8 +69,11 @@ public class Png {
 		// for (Chunk c : chunkList) {
 		// System.out.print(c.stringToWrite());
 		// }
-		saveToFile();
+		saveToFile(destiny);
+	}
 
+	public void createPNG(byte type) {
+		createPNG(type, PATH);
 	}
 
 }

@@ -120,7 +120,8 @@ public class MainGuiWIndow {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FilterType type = (FilterType) comboBox.getSelectedItem();
-				String result = Main.run(txtSource.getText(), type.ordinal());
+				String result = Main.run(txtSource.getText(), type.ordinal(),
+						txtResult.getText());
 				txtResultString.setText(result);
 				// JFrame png = new PictureWindow(txtResult.getSelectedText());
 				// Thread.sleep(15);

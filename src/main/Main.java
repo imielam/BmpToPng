@@ -43,6 +43,14 @@ public class Main {
 		return "zakoñczy³em konwersje.";
 	}
 
+	public static String run(String sciezka, int typ, String destiny) {
+		Bmp bmp = new Bmp(sciezka);
+		bmp.compute();
+		Png png = new Png(bmp.getRgbMatrix());
+		png.createPNG((byte) typ, destiny);
+		return "zakoñczy³em konwersje.";
+	}
+
 	public static void main(String[] args) {
 		Bmp bmp = new Bmp(SCIEZKA);
 		bmp.compute();
